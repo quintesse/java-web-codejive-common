@@ -5,13 +5,11 @@ package org.codejive.common.config;
 
 import java.io.File;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.codejive.common.cache.HashedObjectCache;
 import org.codejive.common.cache.ObjectCache;
 
 public abstract class AppConfig {
-	public abstract Logger getLogger();
 	public abstract ObjectCache getCache();
 	public abstract Set<File> getResourcePaths();
 	public abstract Set<File> getPrivateResourcePaths();

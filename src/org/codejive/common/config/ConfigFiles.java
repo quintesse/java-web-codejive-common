@@ -1,6 +1,7 @@
 package org.codejive.common.config;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 import org.codejive.common.CodejiveException;
 import org.codejive.common.cache.FileUpdateMonitor;
@@ -18,6 +19,7 @@ import org.w3c.dom.Document;
  */
 public class ConfigFiles {
 
+	private static Logger logger = Logger.getLogger(ConfigFiles.class.getName());
 	private static AppConfig config = AppConfig.getInstance();
 
 	/**
@@ -39,7 +41,7 @@ public class ConfigFiles {
 		if (doc == null) {
 			File file = config.getResourceFile(_fileName);
 			try {
-				config.getLogger().info("ConfigFiles::getDocument - Reading '" + file.getAbsolutePath() + "'");
+				logger.info("ConfigFiles::getDocument - Reading '" + file.getAbsolutePath() + "'");
 				doc = XmlHelper.readDocument(file);
 			} catch (CodejiveException e) {
 				throw new ConfigurationException(e);
@@ -69,7 +71,7 @@ public class ConfigFiles {
 		if (doc == null) {
 			File file = config.getPrivateResourceFile(_fileName);
 			try {
-				config.getLogger().info("ConfigFiles::getPrivateDocument - Reading '" + file.getAbsolutePath() + "'");
+				logger.info("ConfigFiles::getPrivateDocument - Reading '" + file.getAbsolutePath() + "'");
 				doc = XmlHelper.readDocument(file);
 			} catch (CodejiveException e) {
 				throw new ConfigurationException(e);

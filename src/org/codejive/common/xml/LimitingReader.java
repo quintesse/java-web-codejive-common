@@ -47,6 +47,8 @@ public class LimitingReader extends StreamReaderDelegate {
 	}
 
 	// To make sure that this is implemented in a way that works for us
+	// (we want all access to the underlying reader to go through next()
+	// but it seems the implementation of nextTag() doesn't use it)
 	@Override
 	public int nextTag() throws XMLStreamException {
 		int eventType = next();
