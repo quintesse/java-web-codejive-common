@@ -29,8 +29,10 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 
 import javax.xml.parsers.*;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -105,6 +107,20 @@ public class XmlHelper {
     	serialize(_result, _source, true, false);
     }
 
+    public static void serialize(Result _result, XMLStreamReader _source) throws CodejiveException {
+    	serialize(_result, new StAXSource(_source), true, false);
+    }
+    
+    public static void serialize(Writer _writer, Source _source) throws CodejiveException {
+		StreamResult result = new StreamResult(_writer);
+		serialize(result, _source);
+    }
+    
+    public static void serialize(Writer _writer, XMLStreamReader _source) throws CodejiveException {
+		StreamResult result = new StreamResult(_writer);
+		serialize(result, new StAXSource(_source));
+    }
+
     public static void serialize(Writer _writer, Node _node, boolean _indent, boolean _omitXmlDecl) throws CodejiveException {
 		DOMSource source = new DOMSource(_node);
 		StreamResult result = new StreamResult(_writer);
@@ -120,12 +136,25 @@ public class XmlHelper {
     	// For a document we'll just assume you want identing and XML declaration
     	serialize(_writer, _doc, true, false);
     }
+    
+    public static String serialize(Source _source) throws CodejiveException {
+		StringWriter writer = new StringWriter();
+		StreamResult result = new StreamResult(writer);
+		serialize(result, _source);
+		return result.toString();
+    }
+
+    public static String serialize(XMLStreamReader _source) throws CodejiveException {
+		StringWriter writer = new StringWriter();
+		StreamResult result = new StreamResult(writer);
+		serialize(result, new StAXSource(_source));
+		return result.toString();
+    }
 
     public static String serialize(Node _node, String _encoding, boolean _indent, boolean _omitXmlDecl) throws CodejiveException {
-		StringWriter aStrWriter = new StringWriter();
-		serialize(aStrWriter, _node, _indent, _omitXmlDecl);
-		String sResult = aStrWriter.toString();
-		return sResult;
+		StringWriter result = new StringWriter();
+		serialize(result, _node, _indent, _omitXmlDecl);
+		return result.toString();
     }
 
     public static String serialize(Node _node, boolean _indent, boolean _omitXmlDecl) throws CodejiveException {

@@ -112,7 +112,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 		if (_namespaceURI == null) {
 			throw new IllegalArgumentException("Namespace URI may not be null");
 		}
-		ArrayList prefixes = new ArrayList();
+		ArrayList<String> prefixes = new ArrayList<String>();
 		if (XMLConstants.XML_NS_URI.equals(_namespaceURI)) {
 			prefixes.add(XMLConstants.XML_NS_PREFIX);
 		} else if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(_namespaceURI)) {

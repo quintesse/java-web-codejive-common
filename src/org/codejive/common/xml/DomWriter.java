@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.EntityReference;
 import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
+import org.w3c.dom.Text;
 
 /**
  * @author tako
@@ -269,8 +270,8 @@ public class DomWriter implements XMLStreamWriter {
 		if (current == doc) {
 			throw new XMLStreamException(new IllegalStateException("No element started"));
 		}
-		Element elem = (Element)current;
-		elem.setTextContent(_text);
+		Text textNode = doc.createTextNode(_text);
+		current.appendChild(textNode);
 	}
 
 	/* (non-Javadoc)

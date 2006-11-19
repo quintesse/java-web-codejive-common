@@ -4,7 +4,6 @@
 package org.codejive.common.xml;
 
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
@@ -25,7 +24,7 @@ public class DomReader implements XMLStreamReader {
 	private Document doc;
 	private Node start, current;
 	private boolean isStartElement;
-	private int eventType;
+	private int currentEventType;
 	private ArrayList<Attr> attrList;
 	private ArrayList<Attr> nsList;
 	private char[] currentText;
@@ -95,11 +94,11 @@ public class DomReader implements XMLStreamReader {
 	private void analyzeCurrent() {
 		switch (current.getNodeType()) {
 			case Node.DOCUMENT_NODE:
-				eventType = (isStartElement) ? START_DOCUMENT : END_DOCUMENT;
+				currentEventType = (isStartElement) ? START_DOCUMENT : END_DOCUMENT;
 				break;
 			case Node.ELEMENT_NODE:
 				if (isStartElement) {
-					eventType = START_ELEMENT;
+					currentEventType = START_ELEMENT;
 					attrList.clear();
 					nsList.clear();
 					for (int i = 0; i < current.getAttributes().getLength(); i++) {
@@ -111,7 +110,7 @@ public class DomReader implements XMLStreamReader {
 						}
 					}
 				} else {
-					eventType = END_ELEMENT;
+					currentEventType = END_ELEMENT;
 					attrList.clear();
 					nsList.clear();
 					for (int i = 0; i < current.getAttributes().getLength(); i++) {
@@ -125,31 +124,31 @@ public class DomReader implements XMLStreamReader {
 			case Node.ATTRIBUTE_NODE:
 				Attr attr = (Attr)current;
 				if (isNSAttr(attr)) {
-					eventType = NAMESPACE;
+					currentEventType = NAMESPACE;
 				} else {
-					eventType = ATTRIBUTE;
+					currentEventType = ATTRIBUTE;
 				}
 				break;
 			case Node.COMMENT_NODE:
-				eventType = COMMENT;
+				currentEventType = COMMENT;
 				break;
 			case Node.CDATA_SECTION_NODE:
-				eventType = CDATA;
+				currentEventType = CDATA;
 				break;
 			case Node.ENTITY_NODE:
-				eventType = ENTITY_DECLARATION;
+				currentEventType = ENTITY_DECLARATION;
 				break;
 			case Node.ENTITY_REFERENCE_NODE:
-				eventType = ENTITY_REFERENCE;
+				currentEventType = ENTITY_REFERENCE;
 				break;
 			case Node.NOTATION_NODE:
-				eventType = NOTATION_DECLARATION;
+				currentEventType = NOTATION_DECLARATION;
 				break;
 			case Node.PROCESSING_INSTRUCTION_NODE:
-				eventType = PROCESSING_INSTRUCTION;
+				currentEventType = PROCESSING_INSTRUCTION;
 				break;
 			case Node.TEXT_NODE:
-				eventType = CHARACTERS;
+				currentEventType = CHARACTERS;
 				break;
 		}
 	}
@@ -175,11 +174,11 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public int getEventType() {
-		return eventType;
+		return currentEventType;
 	}
 
 	public int next() throws XMLStreamException {
-		if ((eventType == START_DOCUMENT) || (eventType == START_ELEMENT)) {
+		if ((currentEventType == START_DOCUMENT) || (currentEventType == START_ELEMENT)) {
 			if (current.getChildNodes().getLength() > 0) {
 				current = current.getFirstChild();
 			} else {
@@ -223,14 +222,14 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public int getAttributeCount() {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT && eventType != ATTRIBUTE) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT && currentEventType != ATTRIBUTE) {
 			throw new IllegalStateException("Only legal for element and attribute types");
 		}
 		return attrList.size();
 	}
 
 	public QName getAttributeName(int _index) {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT && eventType != ATTRIBUTE) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT && currentEventType != ATTRIBUTE) {
 			throw new IllegalStateException("Only legal for element and attribute types");
 		}
 		Attr attr = attrList.get(_index);
@@ -238,7 +237,7 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public String getAttributeLocalName(int _index) {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT && eventType != ATTRIBUTE) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT && currentEventType != ATTRIBUTE) {
 			throw new IllegalStateException("Only legal for element and attribute types");
 		}
 		Attr attr = attrList.get(_index);
@@ -246,7 +245,7 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public String getAttributeNamespace(int _index) {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT && eventType != ATTRIBUTE) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT && currentEventType != ATTRIBUTE) {
 			throw new IllegalStateException("Only legal for element and attribute types");
 		}
 		Attr attr = attrList.get(_index);
@@ -254,7 +253,7 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public String getAttributePrefix(int _index) {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT && eventType != ATTRIBUTE) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT && currentEventType != ATTRIBUTE) {
 			throw new IllegalStateException("Only legal for element and attribute types");
 		}
 		Attr attr = attrList.get(_index);
@@ -262,7 +261,7 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public String getAttributeType(int _index) {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT && eventType != ATTRIBUTE) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT && currentEventType != ATTRIBUTE) {
 			throw new IllegalStateException("Only legal for element and attribute types");
 		}
 		Attr attr = attrList.get(_index);
@@ -270,7 +269,7 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public boolean isAttributeSpecified(int _index) {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT && eventType != ATTRIBUTE) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT && currentEventType != ATTRIBUTE) {
 			throw new IllegalStateException("Only legal for element and attribute types");
 		}
 		Attr attr = attrList.get(_index);
@@ -281,7 +280,7 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public String getAttributeValue(int _index) {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT && eventType != ATTRIBUTE) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT && currentEventType != ATTRIBUTE) {
 			throw new IllegalStateException("Only legal for element and attribute types");
 		}
 		Attr attr = attrList.get(_index);
@@ -289,7 +288,7 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public String getAttributeValue(String _namespaceURI, String _localName) {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT && eventType != ATTRIBUTE) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT && currentEventType != ATTRIBUTE) {
 			throw new IllegalStateException("Only legal for element and attribute types");
 		}
 		Attr result = null;
@@ -304,14 +303,14 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public int getNamespaceCount() {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT && eventType != NAMESPACE) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT && currentEventType != NAMESPACE) {
 			throw new IllegalStateException("Only legal for element and namespace types");
 		}
 		return nsList.size();
 	}
 
 	public String getNamespacePrefix(int _index) {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT && eventType != NAMESPACE) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT && currentEventType != NAMESPACE) {
 			throw new IllegalStateException("Only legal for element and namespace types");
 		}
 		String prefix;
@@ -329,7 +328,7 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public String getNamespaceURI(int _index) {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT && eventType != NAMESPACE) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT && currentEventType != NAMESPACE) {
 			throw new IllegalStateException("Only legal for element and namespace types");
 		}
 		Attr attr = nsList.get(_index);
@@ -338,7 +337,7 @@ public class DomReader implements XMLStreamReader {
 
 	public String getNamespaceURI() {
 		String result;
-		if (eventType == START_ELEMENT || eventType == END_ELEMENT) {
+		if (currentEventType == START_ELEMENT || currentEventType == END_ELEMENT) {
 			result = current.getNamespaceURI();
 		} else {
 			result = null;
@@ -352,31 +351,31 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public boolean hasName() {
-		return ((eventType == START_ELEMENT)
-				|| (eventType == END_ELEMENT)
-				|| (eventType == ENTITY_REFERENCE)
-				|| (eventType == PROCESSING_INSTRUCTION));
+		return ((currentEventType == START_ELEMENT)
+				|| (currentEventType == END_ELEMENT)
+				|| (currentEventType == ENTITY_REFERENCE)
+				|| (currentEventType == PROCESSING_INSTRUCTION));
 	}
 
 	public boolean hasText() {
-		return ((eventType == CHARACTERS)
-				|| (eventType == DTD)
-				|| (eventType == ENTITY_REFERENCE)
-				|| (eventType == CDATA)
-				|| (eventType == SPACE)
-				|| (eventType == COMMENT));
+		return ((currentEventType == CHARACTERS)
+				|| (currentEventType == DTD)
+				|| (currentEventType == ENTITY_REFERENCE)
+				|| (currentEventType == CDATA)
+				|| (currentEventType == SPACE)
+				|| (currentEventType == COMMENT));
 	}
 
 	public boolean isCharacters() {
-		return (eventType == CHARACTERS) || (eventType == CDATA);
+		return (currentEventType == CHARACTERS) || (currentEventType == CDATA);
 	}
 
 	public boolean isStartElement() {
-		return (eventType == START_ELEMENT);
+		return (currentEventType == START_ELEMENT);
 	}
 
 	public boolean isEndElement() {
-		return (eventType == END_ELEMENT);
+		return (currentEventType == END_ELEMENT);
 	}
 
 	public boolean isWhiteSpace() {
@@ -391,7 +390,7 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public QName getName() {
-		if (eventType != START_ELEMENT && eventType != END_ELEMENT) {
+		if (currentEventType != START_ELEMENT && currentEventType != END_ELEMENT) {
 			throw new IllegalStateException("Only legal for element types");
 		}
 		return getNodeName(current);
@@ -491,7 +490,7 @@ public class DomReader implements XMLStreamReader {
 	}
 
 	public void require(int _eventType, String _namespaceURI, String _localName) throws XMLStreamException {
-		if ((eventType != _eventType)
+		if ((currentEventType != _eventType)
 				|| ((_namespaceURI != null) && (_namespaceURI.equals(current.getNamespaceURI())))
 				|| ((_localName != null) && (_localName.equals(current.getLocalName())))) {
 			throw new XMLStreamException("Required values do not match");
