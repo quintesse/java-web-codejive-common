@@ -299,7 +299,7 @@ public class DomReader implements XMLStreamReader {
 				break;
 			}
 		}
-		return result.getValue();
+		return (result != null) ? result.getValue() : null;
 	}
 
 	public int getNamespaceCount() {
