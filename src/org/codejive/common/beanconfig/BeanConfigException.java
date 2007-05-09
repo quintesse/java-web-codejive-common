@@ -38,28 +38,28 @@
  * 
  * Created on Mar 29, 2005
  */
-package org.codejive.common.state;
+package org.codejive.common.beanconfig;
 
 import org.codejive.common.CodejiveException;
 
-public class StateMarshallerException extends CodejiveException {
+public class BeanConfigException extends CodejiveException {
 
-	public StateMarshallerException() {
+	public BeanConfigException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public StateMarshallerException(String message) {
+	public BeanConfigException(String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
 
-	public StateMarshallerException(String message, Throwable cause) {
+	public BeanConfigException(String message, Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	public StateMarshallerException(Throwable cause) {
+	public BeanConfigException(Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}

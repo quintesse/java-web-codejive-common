@@ -37,10 +37,11 @@
  * 
  * Created on Mar 18, 2005
  */
-package org.codejive.common.state;
+package org.codejive.common.beanconfig;
 
-public interface StateMarshaller {
-	void marshall(Object _object) throws StateMarshallerException;
+public interface BeanConfig {
+	void save(Object _object) throws BeanConfigException;
+	Object load() throws BeanConfigException;
 }
 
 
