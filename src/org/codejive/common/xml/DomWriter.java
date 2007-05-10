@@ -98,6 +98,8 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#setPrefix(java.lang.String, java.lang.String)
 	 */
 	public void setPrefix(String _prefix, String _uri) throws XMLStreamException {
+		assert(_prefix != null);
+		assert(_uri != null);
 		context.setPrefix(_prefix, _uri);
 	}
 	
@@ -105,6 +107,7 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#setDefaultNamespace(java.lang.String)
 	 */
 	public void setDefaultNamespace(String _uri) throws XMLStreamException {
+		assert(_uri != null);
 		context.setDefaultNamespace(_uri);
 	}
 
@@ -119,6 +122,7 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#setNamespaceContext(javax.xml.namespace.NamespaceContext)
 	 */
 	public void setNamespaceContext(NamespaceContext _context) throws XMLStreamException {
+		assert(_context != null);
 		throw new RuntimeException("Not implemented yet");
 	}
 
@@ -170,6 +174,7 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#writeStartElement(java.lang.String)
 	 */
 	public void writeStartElement(String _localName) throws XMLStreamException {
+		assert(_localName != null);
 		writeStartElement(null, _localName, null);
 	}
 
@@ -177,6 +182,8 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#writeStartElement(java.lang.String, java.lang.String)
 	 */
 	public void writeStartElement(String _namespaceURI, String _localName) throws XMLStreamException {
+		assert(_namespaceURI != null);
+		assert(_localName != null);
 		String prefix = context.getPrefix(_namespaceURI);
 		writeStartElement(prefix, _localName, _namespaceURI);
 	}
@@ -185,6 +192,9 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#writeStartElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public void writeStartElement(String _prefix, String _localName, String _namespaceURI) throws XMLStreamException {
+		assert(_prefix != null);
+		assert(_localName != null);
+		assert(_namespaceURI != null);
 		if (!docStarted) {
 			throw new XMLStreamException(new IllegalStateException("Document not started yet"));
 		}
@@ -192,7 +202,7 @@ public class DomWriter implements XMLStreamWriter {
 			throw new XMLStreamException(new IllegalStateException("Document already ended"));
 		}
 		String qualifiedName = _localName;
-		if (_prefix != null) {
+		if (_prefix.length() > 0) {
 			qualifiedName = _prefix + ":" + qualifiedName;
 		}
 		Node node = doc.createElementNS(_namespaceURI, qualifiedName);
@@ -220,6 +230,7 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#writeEmptyElement(java.lang.String)
 	 */
 	public void writeEmptyElement(String _localName) throws XMLStreamException {
+		assert(_localName != null);
 		writeStartElement(_localName);
 		writeEndElement();
 	}
@@ -228,6 +239,8 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#writeEmptyElement(java.lang.String, java.lang.String)
 	 */
 	public void writeEmptyElement(String _namespaceURI, String _localName) throws XMLStreamException {
+		assert(_namespaceURI != null);
+		assert(_localName != null);
 		writeStartElement(_namespaceURI, _localName);
 		writeEndElement();
 	}
@@ -236,6 +249,9 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#writeEmptyElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public void writeEmptyElement(String _prefix, String _localName, String _namespaceURI) throws XMLStreamException {
+		assert(_prefix != null);
+		assert(_localName != null);
+		assert(_namespaceURI != null);
 		writeStartElement(_prefix, _localName, _namespaceURI);
 		writeEndElement();
 	}
@@ -268,7 +284,7 @@ public class DomWriter implements XMLStreamWriter {
 			throw new XMLStreamException(new IllegalStateException("No element started"));
 		}
 		String qualifiedName = _localName;
-		if (_prefix != null) {
+		if ((_prefix != null) && (_prefix.length() > 0)) {
 			qualifiedName = _prefix + ":" + qualifiedName;
 		}
 		Element elem = (Element)current;
@@ -304,6 +320,7 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#writeCData(java.lang.String)
 	 */
 	public void writeCData(String _data) throws XMLStreamException {
+		assert(_data != null);
 		if (!docStarted) {
 			throw new XMLStreamException(new IllegalStateException("Document not started yet"));
 		}
@@ -338,6 +355,7 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#writeComment(java.lang.String)
 	 */
 	public void writeComment(String _data) throws XMLStreamException {
+		assert(_data != null);
 		Comment comment = doc.createComment(_data);
 		current.appendChild(comment);
 	}
@@ -346,6 +364,7 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#writeProcessingInstruction(java.lang.String)
 	 */
 	public void writeProcessingInstruction(String _target) throws XMLStreamException {
+		assert(_target != null);
 		writeProcessingInstruction(_target, null);
 	}
 
@@ -353,6 +372,8 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#writeProcessingInstruction(java.lang.String, java.lang.String)
 	 */
 	public void writeProcessingInstruction(String _target, String _data) throws XMLStreamException {
+		assert(_target != null);
+		assert(_data != null);
 		ProcessingInstruction pi = doc.createProcessingInstruction(_target, _data);
 		current.appendChild(pi);
 	}
@@ -378,7 +399,7 @@ public class DomWriter implements XMLStreamWriter {
 			throw new XMLStreamException(new IllegalStateException("No element started"));
 		}
 		String qualifiedName = "xmlns";
-		if (_prefix != null) {
+		if ((_prefix != null) && (_prefix.length() > 0)) {
 			qualifiedName = qualifiedName + ":" + _prefix;
 		}
 		Element elem = (Element)current;
@@ -396,10 +417,8 @@ public class DomWriter implements XMLStreamWriter {
 	 * @see javax.xml.stream.XMLStreamWriter#getProperty(java.lang.String)
 	 */
 	public Object getProperty(String _name) throws IllegalArgumentException {
-		if (_name == null) {
-			throw new IllegalArgumentException("Argument name may not be null");
-		}
-		return null;
+		assert(_name != null);
+		throw new IllegalArgumentException("Argument name may not be null");
 	}
 	
 	/* (non-Javadoc)

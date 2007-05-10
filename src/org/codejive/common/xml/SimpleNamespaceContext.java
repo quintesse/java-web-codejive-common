@@ -126,7 +126,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 	/* (non-Javadoc)
 	 * @see javax.xml.namespace.NamespaceContext#getPrefixes(java.lang.String)
 	 */
-	public Iterator getPrefixes(String _namespaceURI) {
+	public Iterator<String> getPrefixes(String _namespaceURI) {
 		if (_namespaceURI == null) {
 			throw new IllegalArgumentException("Namespace URI may not be null");
 		}
@@ -143,7 +143,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 		return Collections.unmodifiableList(prefixes).iterator();
 	}
 
-	public Iterator getAllPrefixes() {
+	public Iterator<String> getAllPrefixes() {
 		return namespaces.values().iterator();
 	}
 
