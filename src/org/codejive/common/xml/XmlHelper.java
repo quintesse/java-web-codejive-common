@@ -300,6 +300,7 @@ public class XmlHelper {
 				transformer = factory.newTransformer();
 			}
 			transformer.setOutputProperty(OutputKeys.INDENT, (_indent ? "yes" : "no"));
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, (_omitXmlDecl ? "yes" : "no"));
 		} catch (TransformerConfigurationException e) {
 			throw new CodejiveException(e);
